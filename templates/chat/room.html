@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ room.name }}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'chat/css/chat.css' %}">
+</head>
+
+<body>
+<div class="chat-container">
+
+    <!-- HEADER -->
+    <div class="chat-header">
+        <h2>{{ room_name }}</h2>
+        <div id="online-status">
+            <span class="online-dot"></span>
+            <span id="status-text">offline</span>
+   
+        </div>
+    </div>
+<div class="search-box">
+    <input type="text" id="search-input" placeholder="Search messages...">
+</div>
+
+  <!-- MESSAGES -->
+<div class="chat-messages" id="chat-box" data-count="{{messages|length}}">
+    {% for message in messages %}
+
+        <div class="message {% if message.sender == request.user %}msg-sent{% else %}msg-received{% endif %}"
+             data-sender="{{message.sender.username}}">
+
+            <div class="bubble">
+
+                <div class="text">
+                    {{ message.content }}
+                </div>
+                {% if message.image %}
+                <a href="{{message.image.url }}" target="_blank">
+                    <img src="{{ message.image.url }}" width="200" class="chat-image">
+                </a>
+                {% endif %}
+                {% if message.file %}
+                <a href="{{ message.file.url }}" target="_blank">Download File</a>
+                {% endif %}
+                <div class="meta">
+
+                    {{ message.created_at|date:"H:i" }}
+
+                    {% if message.sender == request.user %}
+                        <a href="{% url 'delete_message' message.id %}" class="delete">×</a>
+                    {% endif %}
+
+                </div>
+
+            </div>
+        </div>
+
+    {% endfor %}
+</div>
+    <div id="typing-status" style="
+    padding-left: 20px;
+    color:grey;
+    font-size: 13px;
+    height: 20px;
+    ">
+    </div>
+    <div class="chat-input">
+        <form id="chat-form"
+        method="POST" action="{% url 'upload_file' room_name=room_name %}"
+         enctype="multipart/form-data">
+            {% csrf_token %}
+        <input type="text" id="msg" name="message" placeholder="Type a message...">
+        <input type="file" name="file" id="file-input" accept=".png,.jpg,.JPG,.JPEG,.WEBP,.jpeg,.webp,.gif,.pdf,.doc,.docx"/>
+        <button type="button" id="send-btn">Send</button>
+        </form>
+    </div>
+
+</div>
+<script>
+    const ROOM_NAME = "{{ room_name }}";
+    const CURRENT_USER = "{{ request.user.username }}";
+</script>
+<script src="{% static 'chat/js/chat.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Rooms
+{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+<div class="top-bar">
+
+<div>
+
+<h1 class="page-title">
+Your Rooms
+</h1>
+
+<p class="page-subtitle">
+Choose a room and continue chatting.
+</p>
+
+</div>
+
+<a
+href="{% url 'create_room' %}"
+class="create-btn">
+
++ Create Room
+
+</a>
+
+</div>
+
+<div class="room-grid">
+
+{% for room in rooms %}
+
+<div class="card room-card">
+
+<div class="room-name">
+
+{{ room.name }}
+
+</div>
+
+<div class="room-meta">
+
+Realtime messaging room
+
+</div>
+
+<a
+href="{% url 'room' room.name %}"
+class="enter-btn">
+
+Enter Room
+
+</a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+{% endblock %}

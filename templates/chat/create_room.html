@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Create Room
+{% endblock %}
+
+{% block content %}
+
+<div class="auth-wrapper">
+
+<div class="card auth-card">
+
+<div class="logo">
+Create Room
+</div>
+
+<p class="subtitle">
+Start a new realtime conversation room.
+</p>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="error-message">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<form method="POST">
+
+{% csrf_token %}
+
+<input
+type="text"
+name="room_name"
+placeholder="Enter room name">
+<div class="users-section">
+
+    <h3>Select Participants</h3>
+
+    <div class="users-list">
+
+        {% for user in users %}
+
+        <label class="user-card">
+
+            <input
+                type="checkbox"
+                name="users"
+                value="{{ user.id }}">
+
+            <span>
+                {{ user.username }}
+            </span>
+
+        </label>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+<button type="submit">
+
+Create Room
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+{% endblock %}
